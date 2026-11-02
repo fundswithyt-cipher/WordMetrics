@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordMetric | Free Character Counter & Text Analyzer</title>
+    <meta name="description" content="Free online text character counter and word analyzer. Instantly check character count without spaces, sentence limits, reading time, and social media limits.">
+    <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { 
+            background: linear-gradient(135deg, #ebf8ff 0%, #f0f4f8 100%); 
+            color: #1e293b; 
+            margin: 0; 
+            padding: 30px 20px; 
+            line-height: 1.6; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            padding: 35px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.08), 0 8px 10px -6px rgba(2, 132, 199, 0.04); 
+            border: 1px solid #e0f2fe;
+            width: 100%;
+        }
+        
+        .header-flex { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #f0f9ff;
+            padding-bottom: 15px;
+        }
+        
+        h1 { 
+            margin: 0; 
+            color: #0284c7; 
+            font-size: 32px; 
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle { 
+            color: #64748b; 
+            margin-top: 6px; 
+            font-size: 15px; 
+        }
+        
+        .lang-select { 
+            padding: 9px 14px; 
+            border-radius: 8px; 
+            border: 1px solid #bae6fd; 
+            background: #f0f9ff; 
+            color: #0369a1;
+            font-size: 14px; 
+            font-weight: 600;
+            cursor: pointer; 
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .lang-select:hover {
+            background: #e0f2fe;
+            border-color: #7dd3fc;
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 220px; 
+            padding: 16px; 
+            border: 2px solid #e0f2fe; 
+            background: #fafcfd;
+            border-radius: 10px; 
+            font-size: 16px; 
+            color: #0f172a;
+            resize: vertical; 
+            transition: all 0.2s; 
+        }
+        
+        textarea:focus { 
+            border-color: #0284c7; 
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+            outline: none; 
+        }
+        
+        .btn-group { 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+            margin: 18px 0 30px 0; 
+        }
+        
+        button { 
+            padding: 10px 18px; 
+            border: 1px solid #bae6fd; 
+            background: #f0f9ff; 
+            color: #0369a1; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: 600; 
+            transition: all 0.2s; 
+        }
+        
+        button:hover { 
+            background: #e0f2fe; 
+            color: #0284c7;
+            border-color: #7dd3fc;
+        }
+        
+        button.primary { 
+            background: #0284c7; 
+            color: #ffffff; 
+            border: none;
+        }
+        
+        button.primary:hover { 
+            background: #0369a1; 
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+        }
+
+        .section-title { 
+            font-size: 19px; 
+            font-weight: 700; 
+            color: #0f172a; 
+            margin: 30px 0 15px 0; 
+        }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+            gap: 14px; 
+        }
+        
+        .stat-card { 
+            background: #f8fafc; 
+            padding: 18px 12px; 
+            border-radius: 10px; 
+            text-align: center; 
+            border: 1px solid #e2e8f0; 
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .stat-card:hover {
+            border-color: #bae6fd;
+            transform: translateY(-2px);
+        }
+        
+        .stat-card .val { 
+            font-size: 24px; 
+            font-weight: 800; 
+            color: #0284c7; 
+        }
+        
+        .stat-card .label { 
+            font-size: 13px; 
+            color: #64748b; 
+            margin-top: 5px; 
+            font-weight: 500;
+        }
+
+        .social-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 16px; 
+        }
+        
+        .social-card { 
+            background: #ffffff; 
+            padding: 18px; 
+            border-radius: 10px; 
+            border: 1px solid #e0f2fe; 
+            box-shadow: 0 2px 4px rgba(2, 132, 199, 0.02);
+        }
+        
+        .social-header { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 14px; 
+            font-weight: 600; 
+            margin-bottom: 10px; 
+            color: #1e293b;
+        }
+        
+        .social-count { 
+            color: #64748b; 
+            font-size: 13px; 
+        }
+        
+        .progress-bar-bg { 
+            width: 100%; 
+            height: 8px; 
+            background: #e0f2fe; 
+            border-radius: 4px; 
+            overflow: hidden; 
+        }
+        
+        .progress-bar-fill { 
+            height: 100%; 
+            width: 0%; 
+            background: #0284c7; 
+            transition: width 0.2s, background-color 0.2s; 
+        }
+        
+        .progress-bar-fill.warning { 
+            background: #ef4444; 
+        }
+
+        .seo-content { 
+            margin-top: 45px; 
+            border-top: 2px solid #f0f9ff; 
+            padding-top: 30px; 
+            color: #334155; 
+        }
+        
+        .seo-content h2 { 
+            color: #0f172a; 
+            font-size: 22px; 
+            font-weight: 700;
+        }
+        
+        .seo-content h3 { 
+            color: #0369a1; 
+            font-size: 17px; 
+            margin-top: 25px; 
+        }
+        
+        .seo-content p { 
+            margin-bottom: 16px; 
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 15px 0;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        footer span {
+            color: #0284c7;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-flex">
+        <div>
+            <h1>WordMetric</h1>
+            <div class="subtitle" id="t-subtitle">Instant real-time character counting, readability metrics, and social media post limits.</div>
+        </div>
+        <div>
+            <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
+            </select>
+        </div>
+    </div>
+    
+    <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+    
+    <div class="btn-group">
+        <button onclick="transformText('upper')">UPPERCASE</button>
+        <button onclick="transformText('lower')">lowercase</button>
+        <button onclick="transformText('title')">Title Case</button>
+        <button onclick="transformText('clean')">Remove Extra Spaces</button>
+        <button class="primary" onclick="copyText()" id="btnCopy">Copy Text</button>
+        <button onclick="clearText()" id="btnClear">Clear</button>
+    </div>
+
+    <!-- Core Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card"><div class="val" id="words">0</div><div class="label" id="l-words">Words</div></div>
+        <div class="stat-card"><div class="val" id="chars">0</div><div class="label" id="l-chars">Chars (with spaces)</div></div>
+        <div class="stat-card"><div class="val" id="charsNoSpace">0</div><div class="label" id="l-charsNoSpace">Chars (no spaces)</div></div>
+        <div class="stat-card"><div class="val" id="sentences">0</div><div class="label" id="l-sentences">Sentences</div></div>
+        <div class="stat-card"><div class="val" id="paragraphs">0</div><div class="label" id="l-paragraphs">Paragraphs</div></div>
+        <div class="stat-card"><div class="val" id="readTime">0 sec</div><div class="label" id="l-readTime">Reading Time</div></div>
+        <div class="stat-card"><div class="val" id="speakTime">0 sec</div><div class="label" id="l-speakTime">Speaking Time</div></div>
+    </div>
+
+    <!-- Social Media Indicators -->
+    <div class="section-title" id="t-socialTitle">Social Media Limits</div>
+    <div class="social-grid">
+        <div class="social-card">
+            <div class="social-header">
+                <span id="t-twitter">X / Twitter Post</span>
+                <span class="social-count"><span id="xCount">0</span> / 280</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="xBar"></div></div>
+        </div>
+
+        <div class="social-card">
+            <div class="social-header">
+                <span id="t-insta">Instagram Bio</span>
+                <span class="social-count"><span id="igCount">0</span> / 150</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="igBar"></div></div>
+        </div>
+
+        <div class="social-card">
+            <div class="social-header">
+                <span id="t-linkedin">LinkedIn Post</span>
+                <span class="social-count"><span id="liCount">0</span> / 3,000</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="liBar"></div></div>
+        </div>
+    </div>
+
+    <!-- SEO Content Section -->
+    <div class="seo-content" id="seoSection">
+        <h2>Free Online Character Counter & Text Length Analyzer</h2>
+        <p>Whether you need to check sentence length for an essay, calculate reading time for a speech, or format a post for social media, our free online text counter provides instant metrics without requiring registration or software downloads.</p>
+        
+        <h3>Targeted Text Analysis & Formatting Tools</h3>
+        <p>Use our real-time text tools to count characters without spaces, convert text to title case, or clean up awkward spacing before publishing your content online.</p>
+
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>How do I check character count without spaces?</strong><br>Our tool automatically calculates character count with and without spaces in real time. Simply paste your text into the box above to see both totals listed under the core metrics grid.</p>
+        
+        <p><strong>How many characters is a 500 word essay?</strong><br>A typical 500-word essay contains approximately 2,500 to 3,000 characters including spaces, depending on word choice and sentence structure.</p>
+
+        <p><strong>What is the maximum Instagram bio character limit?</strong><br>Instagram limits user bios to exactly 150 characters. Use our built-in progress bar above to ensure your bio stays within the maximum allowance.</p>
+
+        <p><strong>How to calculate speech duration from word count?</strong><br>Speech length is estimated using an average speaking pace of 130 words per minute. For example, a 650-word speech takes approximately 5 minutes to deliver at a standard cadence.</p>
+
+        <p><strong>Why is my character count different on Twitter vs Word?</strong><br>Microsoft Word counts hidden spacing, line breaks, and emojis differently than social media platforms. Our tool matches the character metrics used by modern web platforms like X (Twitter) and LinkedIn.</p>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 <span>WordMetric</span>. All rights reserved.
+</footer>
+
+<script>
+    const textInput = document.getElementById('textInput');
+    textInput.addEventListener('input', updateStats);
+
+    const translations = {
+        en: {
+            subtitle: "Instant real-time character counting, readability metrics, and social media post limits.",
+            placeholder: "Type or paste your text here...",
+            btnCopy: "Copy Text",
+            btnClear: "Clear",
+            words: "Words",
+            chars: "Chars (with spaces)",
+            charsNoSpace: "Chars (no spaces)",
+            sentences: "Sentences",
+            paragraphs: "Paragraphs",
+            readTime: "Reading Time",
+            speakTime: "Speaking Time",
+            socialTitle: "Social Media Limits",
+            twitter: "X / Twitter Post",
+            insta: "Instagram Bio",
+            linkedin: "LinkedIn Post",
+            sec: "sec",
+            min: "min",
+            copiedAlert: "Text copied to clipboard!"
+        },
+        es: {
+            subtitle: "Conteo instantáneo de caracteres en tiempo real, métricas y límites de redes sociales.",
+            placeholder: "Escribe o pega tu texto aquí...",
+            btnCopy: "Copiar Texto",
+            btnClear: "Borrar",
+            words: "Palabras",
+            chars: "Caracteres (con espacios)",
+            charsNoSpace: "Caracteres (sin espacios)",
+            sentences: "Oraciones",
+            paragraphs: "Párrafos",
+            readTime: "Tiempo de lectura",
+            speakTime: "Tiempo de habla",
+            socialTitle: "Límites de Redes Sociales",
+            twitter: "Publicación de X / Twitter",
+            insta: "Biografía de Instagram",
+            linkedin: "Publicación de LinkedIn",
+            sec: "seg",
+            min: "min",
+            copiedAlert: "¡Texto copiado al portapapeles!"
+        },
+        de: {
+            subtitle: "Echtzeit-Zeichenzählung, Lesbarkeitsmetriken und Social-Media-Limits.",
+            placeholder: "Text hier eingeben oder einfügen...",
+            btnCopy: "Text kopieren",
+            btnClear: "Löschen",
+            words: "Wörter",
+            chars: "Zeichen (mit Leerzeichen)",
+            charsNoSpace: "Zeichen (ohne Leerzeichen)",
+            sentences: "Sätze",
+            paragraphs: "Absätze",
+            readTime: "Lesezeit",
+            speakTime: "Sprechzeit",
+            socialTitle: "Social-Media-Limits",
+            twitter: "X / Twitter Beitrag",
+            insta: "Instagram Bio",
+            linkedin: "LinkedIn Beitrag",
+            sec: "Sek",
+            min: "Min",
+            copiedAlert: "Text in die Zwischenablage kopiert!"
+        }
+    };
+
+    let currentLang = 'en';
+
+    function changeLanguage() {
+        const select = document.getElementById('langSelect');
+        currentLang = select.value;
+        const t = translations[currentLang];
+
+        document.getElementById('t-subtitle').innerText = t.subtitle;
+        textInput.placeholder = t.placeholder;
+        document.getElementById('btnCopy').innerText = t.btnCopy;
+        document.getElementById('btnClear').innerText = t.btnClear;
+        
+        document.getElementById('l-words').innerText = t.words;
+        document.getElementById('l-chars').innerText = t.chars;
+        document.getElementById('l-charsNoSpace').innerText = t.charsNoSpace;
+        document.getElementById('l-sentences').innerText = t.sentences;
+        document.getElementById('l-paragraphs').innerText = t.paragraphs;
+        document.getElementById('l-readTime').innerText = t.readTime;
+        document.getElementById('l-speakTime').innerText = t.speakTime;
+
+        document.getElementById('t-socialTitle').innerText = t.socialTitle;
+        document.getElementById('t-twitter').innerText = t.twitter;
+        document.getElementById('t-insta').innerText = t.insta;
+        document.getElementById('t-linkedin').innerText = t.linkedin;
+
+        updateStats();
+    }
+
+    function formatDuration(totalSeconds) {
+        const t = translations[currentLang];
+        if (totalSeconds < 60) {
+            return `${totalSeconds} ${t.sec}`;
+        } else {
+            const minutes = (totalSeconds / 60).toFixed(1);
+            const cleanMinutes = minutes.endsWith('.0') ? parseInt(minutes) : minutes;
+            return `${cleanMinutes} ${t.min}`;
+        }
+    }
+
+    function updateStats() {
+        const text = textInput.value;
+        const trimmed = text.trim();
+        
+        const wordCount = trimmed ? trimmed.split(/\s+/).length : 0;
+        document.getElementById('words').innerText = wordCount.toLocaleString();
+
+        const charCount = text.length;
+        const charNoSpaceCount = text.replace(/\s/g, '').length;
+        document.getElementById('chars').innerText = charCount.toLocaleString();
+        document.getElementById('charsNoSpace').innerText = charNoSpaceCount.toLocaleString();
+
+        const sentenceCount = trimmed ? text.split(/[.!?]+/).filter(Boolean).length : 0;
+        document.getElementById('sentences').innerText = sentenceCount.toLocaleString();
+
+        const paragraphCount = trimmed ? text.split(/\n+/).filter(p => p.trim().length > 0).length : 0;
+        document.getElementById('paragraphs').innerText = paragraphCount.toLocaleString();
+
+        const readingSeconds = Math.round((wordCount / 200) * 60);
+        const speakingSeconds = Math.round((wordCount / 130) * 60);
+
+        document.getElementById('readTime').innerText = wordCount ? formatDuration(readingSeconds) : `0 ${translations[currentLang].sec}`;
+        document.getElementById('speakTime').innerText = wordCount ? formatDuration(speakingSeconds) : `0 ${translations[currentLang].sec}`;
+
+        updateLimit('xCount', 'xBar', charCount, 280);
+        updateLimit('igCount', 'igBar', charCount, 150);
+        updateLimit('liCount', 'liBar', charCount, 3000);
+    }
+
+    function updateLimit(countId, barId, current, max) {
+        document.getElementById(countId).innerText = current.toLocaleString();
+        const fill = document.getElementById(barId);
+        const percentage = Math.min((current / max) * 100, 100);
+        fill.style.width = percentage + '%';
+        
+        if (current > max) {
+            fill.classList.add('warning');
+        } else {
+            fill.classList.remove('warning');
+        }
+    }
